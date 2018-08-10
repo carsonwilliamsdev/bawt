@@ -1,0 +1,33 @@
+{
+  "name": "bawt",
+  "version": "1.0.0",
+  "description": "Discord bot using Discord.js and Heroku",
+  "main": "index.js",
+  "engines": {
+    "node": "8.x",
+    "npm": "*"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sxhatrix/bawt.git"
+  },
+  "keywords": [
+    "heroku",
+    "discord.js",
+    "discord",
+    "bot"
+  ],
+  "author": "Carson Williams and Brandon Stewart",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sxhatrix/bawt/issues"
+  },
+  "homepage": "https://github.com/sxhatrix/bawt#readme",
+  "dependencies": {
+    "discord.js": "^11.4.0"
+  }
+}
