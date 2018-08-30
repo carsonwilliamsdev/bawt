@@ -19,7 +19,10 @@ const keyWords = keywords.keyWords();
 const keyWordsJson = keywords.keyWordsJson();
 
 client.on("message", (message) => {
-  if (message.author.bot) return;
+  console.log(message.author.username + ": " + message.content);
+
+  if (message.author.bot) return; // ignore all bot messages
+
   let messageWords = message.content.split(" ");
   keyWords.forEach(function(element) {
       let found = messageWords.filter(s => s.includes(element));
@@ -29,10 +32,9 @@ client.on("message", (message) => {
       }
     });
 
-  // messages must start with prefix and ignore all bot messages
-  if (!message.content.toLowerCase().startsWith(prefix) || message.author.bot) return;
+  // messages must start with prefix
+  if (!message.content.toLowerCase().startsWith(prefix))  return;
 
-  console.log(message.content)
   const args = message.content.slice(prefix.length).trim().split(" ");
   const command = args.shift().toLowerCase().trim();
 
