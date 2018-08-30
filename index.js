@@ -4,6 +4,8 @@ const client = new Discord.Client();
 const GphApiClient = require('giphy-js-sdk-core')
 const giphyclient = GphApiClient(process.env.GIPHYAPIKEY)
 const prefix = "bawt";
+const keywords = require('./keywords');
+
 var CronJob = require('cron').CronJob;
 
 client.on("ready", () => {
@@ -13,10 +15,24 @@ client.on("ready", () => {
   }, null, true, 'America/Denver');
 });
 
+const keyWords = keywords.keyWords();
+const keyWordsJson = keywords.keyWordsJson();
+
 client.on("message", (message) => {
+  if (message.author.bot) return;
+  let messageWords = message.content.split(" ");
+  keyWords.forEach(function(element) {
+      let found = messageWords.filter(s => s.includes(element));
+      if (found.length) {
+        let response = keyWordsJson[found]
+        message.channel.send(response);
+      }
+    });
+
   // messages must start with prefix and ignore all bot messages
   if (!message.content.toLowerCase().startsWith(prefix) || message.author.bot) return;
 
+  console.log(message.content)
   const args = message.content.slice(prefix.length).trim().split(" ");
   const command = args.shift().toLowerCase().trim();
 
@@ -64,5 +80,4 @@ client.on("message", (message) => {
   }
 });
 
-client.login('NDc4MDE1Mzg3NDczMTQ5OTcy.DlY0ew.7wGDQNAdyK1_-V5z-wqaC37k6eY');
-// client.login(process.env.TOKEN);
+client.login(process.env.TOKEN);
