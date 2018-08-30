@@ -1,8 +1,8 @@
 // Bawt
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const GphApiClient = require('giphy-js-sdk-core')
-const giphyclient = GphApiClient(process.env.GIPHYAPIKEY)
+var GphApiClient = require('giphy-js-sdk-core')
+giphyclient = GphApiClient(process.env.GIPHYAPIKEY)
 const prefix = "bawt";
 const keywords = require('./keywords');
 
