@@ -10,8 +10,8 @@ var CronJob = require('cron').CronJob;
 
 client.on("ready", () => {
   console.log("Bawt is ready!");
-  new CronJob('0 35 16 * * *', function() {
-    client.channels.get("431521757032087563").send("blazeit");
+  new CronJob('0 20 16 * * *', function() {
+    client.channels.get(process.env.MAINCHANNELID).send("#blazeit");
   }, null, true, 'America/Denver');
 });
 
@@ -52,8 +52,9 @@ client.on("message", (message) => {
     let min = 1;
     let max = 100;
     let roll = Math.floor(Math.random() * (max - min) + 1);
-    if (message.author.username === "m0dul8r" || message.author.username === "vuletzz")
+    if (message.member.roles.find("name", "LUCKY") && roll < 80)
     {
+      roll += 20;
     }
     message.channel.send(message.author.username + " rolled " + roll + " (" + min + "-" + max + ")")
   }
