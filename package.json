@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/sxhatrix/bawt#readme",
   "dependencies": {
+    "cron": "^1.4.1",
     "discord.js": "^11.4.0"
   }
 }
