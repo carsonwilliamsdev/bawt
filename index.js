@@ -19,7 +19,7 @@ client.on("message", (message) => {
 
   const args = message.content.slice(prefix.length).trim().split(" ");
   const command = args.shift().toLowerCase().trim();
-  
+
   if (command === "sup") {
     message.channel.send("nm");
   }
@@ -53,6 +53,16 @@ client.on("message", (message) => {
       console.log(err);
     })
   }
+  else if (command ==='trump-quote') {
+    fetch("https://api.whatdoestrumpthink.com/api/v1/quotes/random")
+    .then(function(response) {
+        return response.json();
+      })
+      .then(function(trumpJson) {
+        message.channel.send(trumpJson.message);
+    });
+  }
 });
 
-client.login(process.env.TOKEN);
+client.login('NDc4MDE1Mzg3NDczMTQ5OTcy.DlY0ew.7wGDQNAdyK1_-V5z-wqaC37k6eY');
+// client.login(process.env.TOKEN);

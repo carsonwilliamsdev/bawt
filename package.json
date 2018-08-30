@@ -28,7 +28,10 @@
   },
   "homepage": "https://github.com/sxhatrix/bawt#readme",
   "dependencies": {
+    "bufferutil": "^3.0.3",
     "cron": "^1.4.1",
-    "discord.js": "^11.4.0"
+    "discord": "^0.8.2",
+    "discord.js": "^11.4.2",
+    "giphy-js-sdk-core": "^1.0.5"
   }
 }
