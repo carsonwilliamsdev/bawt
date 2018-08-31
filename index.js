@@ -18,6 +18,17 @@ client.on("ready", () => {
 const keyWords = keywords.keyWords();
 const keyWordsJson = keywords.keyWordsJson();
 
+const roll = (message) => {
+  let min = 1;
+  let max = 100;
+  let roll = Math.floor(Math.random() * (max - min) + 1);
+  if (message.member.roles.find("name", "LUCKY") && roll < 80)
+  {
+    roll += 20;
+  }
+  return `${message.author.username} rolled ${roll} (${min}-${max})`
+}
+
 client.on("message", (message) => {
   console.log(message.author.username + ": " + message.content);
 
@@ -51,14 +62,7 @@ client.on("message", (message) => {
     message.channel.send(avatarList);
   }
   else if (command === "roll") {
-    let min = 1;
-    let max = 100;
-    let roll = Math.floor(Math.random() * (max - min) + 1);
-    if (message.member.roles.find("name", "LUCKY") && roll < 80)
-    {
-      roll += 20;
-    }
-    message.channel.send(message.author.username + " rolled " + roll + " (" + min + "-" + max + ")")
+    message.channel.send(roll(message))
   }
   else if (command === "gif")
   {
