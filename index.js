@@ -62,14 +62,14 @@ client.on("message", (message) => {
   }
   else if (command === "gif")
   {
-    let tags = args.join('+');
-    message.channel.send(tags);
-    giphyclient.random('gifs', {"tag" : tags})
+    let query = args.join(' ');
+    message.channel.send(query);
+    giphyclient.search('gifs', {"q": query, "limit" : 10})
     .then((response) => {
-      message.channel.send(response.data.url);
+      message.channel.send(response.data[Math.floor(Math.random() * (10 - 1) + 1)].url);
     })
     .catch((err) => {
-      console.log(err);
+      message.channel.send("giphy didn't work....");
     })
   }
   else if (command ==='trump-quote') {
