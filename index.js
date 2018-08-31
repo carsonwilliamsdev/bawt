@@ -52,7 +52,7 @@ client.on("message", (message) => {
   if (command === "sup") {
     message.channel.send("nm");
   }
-  else if (command === "avatar") {
+  if (command === "avatar") {
     if (!message.mentions.users.size) {
         return message.channel.send(message.author.displayAvatarURL);
     }
@@ -61,10 +61,10 @@ client.on("message", (message) => {
     });
     message.channel.send(avatarList);
   }
-  else if (command === "roll") {
+  if (command === "roll") {
     message.channel.send(roll(message))
   }
-  else if (command === "gif")
+  if (command === "gif")
   {
     let query = args.join(' ');
     message.channel.send(query);
@@ -81,7 +81,7 @@ client.on("message", (message) => {
       message.channel.send("giphy didn't work....");
     })
   }
-  else if (command === "hot-gif")
+  if (command === "hot-gif")
   {
     let rating = "pg-13";
     giphyclient.trending("gifs", {"rating" : rating})
@@ -92,7 +92,7 @@ client.on("message", (message) => {
       console.log(err);
     })
   }
-  else if (command ==='trump-quote') {
+  if (command ==='trump-quote') {
     fetch("https://api.whatdoestrumpthink.com/api/v1/quotes/random")
     .then(function(response) {
         return response.json();
