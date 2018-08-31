@@ -77,6 +77,17 @@ client.on("message", (message) => {
       message.channel.send("giphy didn't work....");
     })
   }
+  else if (command === "hot-gif")
+  {
+    let rating = "pg-13";
+    giphyclient.trending("gifs", {"rating" : rating})
+    .then((response) => {
+      message.channel.send(response.data[Math.floor(Math.random() * (10 - 1) + 1)].url);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
   else if (command ==='trump-quote') {
     fetch("https://api.whatdoestrumpthink.com/api/v1/quotes/random")
     .then(function(response) {
