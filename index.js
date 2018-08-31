@@ -64,7 +64,12 @@ client.on("message", (message) => {
   {
     let query = args.join(' ');
     message.channel.send(query);
-    giphyclient.search('gifs', {"q": query, "limit" : 10})
+    let rating = "pg-13";
+    if(message.channel.nsfw)
+    {
+      rating = "r";
+    }
+    giphyclient.search('gifs', {"q": query, "limit" : 10, "rating" : rating})
     .then((response) => {
       message.channel.send(response.data[Math.floor(Math.random() * (10 - 1) + 1)].url);
     })
