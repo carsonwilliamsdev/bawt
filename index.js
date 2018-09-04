@@ -30,7 +30,8 @@ const roll = (message) => {
 }
 
 client.on("message", (message) => {
-  console.log(message.author.username + ": " + message.content);
+  // log message [servername] [channelname] author: msg
+  console.log("[" + message.guild + "] [" + message.channel.name + "] " + message.author.username + ": " + message.content);
 
   if (message.author.bot) return; // ignore all bot messages
 
