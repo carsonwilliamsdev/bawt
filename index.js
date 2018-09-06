@@ -5,14 +5,17 @@ var GphApiClient = require('giphy-js-sdk-core')
 giphyclient = GphApiClient(process.env.GIPHYAPIKEY)
 const prefix = "bawt";
 const keywords = require('./keywords');
-
 var CronJob = require('cron').CronJob;
 
 client.on("ready", () => {
   console.log("Bawt is ready!");
+  mainChannel = client.channels.get(process.env.MAINCHANNELID);
+
   new CronJob('0 20 16 * * *', function() {
-    client.channels.get(process.env.MAINCHANNELID).send("#blazeit");
+    mainChannel.send("#blazeit");
   }, null, true, 'America/Denver');
+
+  initializeNewsWatcher(mainChannel);
 });
 
 const keyWords = keywords.keyWords();
@@ -27,6 +30,40 @@ const roll = (message) => {
     roll += 20;
   }
   return `${message.author.username} rolled ${roll} (${min}-${max})`
+}
+
+const initializeNewsWatcher = (channel) => {
+  var Watcher  = require('feed-watcher'),
+  feed     = 'https://www.infowars.com/feed/custom_feed_rss',
+  interval = 60 // seconds
+  
+  var watcher = new Watcher(feed, interval)
+  
+  // Check for new entries every 60 seconds.
+  watcher.on('new entries', function (entries) {
+    entries.forEach(function (entry) {
+      console.log(entry.title);
+      channel.send("BREAKING NEWS ALERT FROM INFOWARS.COM");
+      channel.send(entry.title);
+      giphyclient.search('gifs', {"q": "alex jones infowars", "limit" : 10, "rating" : "pg-13"})
+      .then((response) => {
+        channel.send(response.data[Math.floor(Math.random() * (10 - 1) + 1)].url);
+      })
+      .catch((err) => {
+      })
+    })
+  })
+  
+  // Start watching the feed.
+  watcher
+  .start()
+  .then(function (entries) {
+  console.log(entries);
+    channel.send(`Watching ${feed} for breaking news about the globalists.`);
+  })
+  .catch(function(error) {
+    console.error(error)
+  })
 }
 
 client.on("message", (message) => {
