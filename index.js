@@ -25,10 +25,6 @@ const roll = (message) => {
   let min = 1;
   let max = 100;
   let roll = Math.floor(Math.random() * (max - min) + 1);
-  if (message.member.roles.find("name", "LUCKY") && roll < 80)
-  {
-    roll += 20;
-  }
   return `${message.author.username} rolled ${roll} (${min}-${max})`
 }
 
@@ -43,13 +39,15 @@ const initializeNewsWatcher = (channel) => {
   watcher.on('new entries', function (entries) {
     entries.forEach(function (entry) {
       console.log(entry.title);
-      channel.send("BREAKING NEWS ALERT FROM INFOWARS.COM");
-      channel.send(entry.title);
-      giphyclient.search('gifs', {"q": "alex jones infowars", "limit" : 10, "rating" : "pg-13"})
+      giphyclient.search('gifs', {"q": "alex jones", "limit" : 10, "rating" : "pg-13"})
       .then((response) => {
+        channel.send("BREAKING NEWS ALERT FROM INFOWARS.COM");
+        channel.send(entry.title);
         channel.send(response.data[Math.floor(Math.random() * (10 - 1) + 1)].url);
       })
       .catch((err) => {
+        channel.send("BREAKING NEWS ALERT FROM INFOWARS.COM");
+        channel.send(entry.title);
       })
     })
   })
