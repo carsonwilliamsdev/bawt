@@ -6,6 +6,7 @@ giphyclient = GphApiClient(process.env.GIPHYAPIKEY)
 const prefix = "bawt";
 const keywords = require('./keywords');
 var CronJob = require('cron').CronJob;
+const redditQuote = require ('./reddit_quote')
 
 client.on("ready", () => {
   console.log("Bawt is ready!");
@@ -32,9 +33,9 @@ const initializeNewsWatcher = (channel) => {
   var Watcher  = require('feed-watcher'),
   feed     = 'https://www.infowars.com/feed/custom_feed_rss',
   interval = 60 // seconds
-  
+
   var watcher = new Watcher(feed, interval)
-  
+
   // Check for new entries every 60 seconds.
   watcher.on('new entries', function (entries) {
     entries.forEach(function (entry) {
@@ -51,7 +52,7 @@ const initializeNewsWatcher = (channel) => {
       })
     })
   })
-  
+
   // Start watching the feed.
   watcher
   .start()
@@ -128,7 +129,7 @@ client.on("message", (message) => {
       console.log(err);
     })
   }
-  else if (command ==='trump-quote') {
+  else if (command === 'trump-quote') {
     fetch("https://api.whatdoestrumpthink.com/api/v1/quotes/random")
     .then(function(response) {
         return response.json();
@@ -136,6 +137,11 @@ client.on("message", (message) => {
       .then(function(trumpJson) {
         message.channel.send(trumpJson.message);
     });
+  }
+  else if (command === 'lukas-quote') {
+    redditQuote.newQuote().then(function(response) {
+      message.channel.send(response);
+    })
   }
 });
 

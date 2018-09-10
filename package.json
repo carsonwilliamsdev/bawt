@@ -33,6 +33,7 @@
     "discord": "^0.8.2",
     "discord.js": "^11.4.2",
     "feed-watcher": "^0.2.1",
-    "giphy-js-sdk-core": "^1.0.5"
+    "giphy-js-sdk-core": "^1.0.5",
+    "rss-parser": "^3.4.3"
   }
 }
