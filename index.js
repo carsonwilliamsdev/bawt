@@ -4,6 +4,7 @@ const client = new Discord.Client();
 var GphApiClient = require('giphy-js-sdk-core')
 giphyclient = GphApiClient(process.env.GIPHYAPIKEY)
 const prefix = "bawt";
+const version = "yo";
 const keywords = require('./keywords');
 var CronJob = require('cron').CronJob;
 const redditQuote = require ('./reddit_quote')
@@ -87,7 +88,7 @@ client.on("message", (message) => {
   const command = args.shift().toLowerCase().trim();
 
   if (command === "sup") {
-    message.channel.send("nm");
+    message.channel.send(version);
   }
   else if (command === "avatar") {
     if (!message.mentions.users.size) {
