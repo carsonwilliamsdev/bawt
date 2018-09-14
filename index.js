@@ -10,6 +10,10 @@ var CronJob = require('cron').CronJob;
 const redditQuote = require ('./reddit_quote')
 const googleSuggest = require ('./google_suggest')
 
+Array.prototype.randomElement = function () {
+    return this[Math.floor(Math.random() * this.length)]
+}
+
 client.on("ready", () => {
   console.log("Bawt is ready!");
   mainChannel = client.channels.get(process.env.MAINCHANNELID);
@@ -38,21 +42,26 @@ const initializeNewsWatcher = (channel) => {
 
   var watcher = new Watcher(feed, interval)
 
+// A bunch of Alex jones gifs from imgur
+  const alexGifs = [
+    'https://i.imgur.com/7tNfEHO.gif',
+    'https://i.imgur.com/eLNfkb4.gif',
+    'https://i.imgur.com/56RMHrA.gif',
+    'https://i.imgur.com/fQjH53C.gif',
+    'https://i.imgur.com/xctaySa.gif',
+    'https://i.imgur.com/Xo3pYeB.gif',
+    'https://i.imgur.com/ACJndq4.gif',
+    'https://i.imgur.com/pSjmN36.gif',
+    'https://i.imgur.com/zKKfSLi.gif'
+  ]
+
   // Check for new entries every 60 seconds.
   watcher.on('new entries', function (entries) {
     entries.forEach(function (entry) {
-      console.log(entry.title);
-      giphyclient.search('gifs', {"q": "alex jones", "limit" : 10, "rating" : "pg-13"})
-      .then((response) => {
         channel.send("BREAKING NEWS ALERT FROM INFOWARS.COM");
         channel.send(entry.title);
-        channel.send(response.data[Math.floor(Math.random() * (10 - 1) + 1)].url);
-      })
-      .catch((err) => {
-        channel.send("BREAKING NEWS ALERT FROM INFOWARS.COM");
-        channel.send(entry.title);
-      })
     })
+    channel.send(alexGifs.randomElement())
   })
 
   // Start watching the feed.
