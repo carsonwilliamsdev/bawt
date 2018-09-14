@@ -9,6 +9,7 @@ const keywords = require('./keywords');
 var CronJob = require('cron').CronJob;
 const redditQuote = require ('./reddit_quote')
 const googleSuggest = require ('./google_suggest')
+const dankMeme = require ('./dank_meme')
 
 Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)]
@@ -150,18 +151,24 @@ client.on("message", (message) => {
     });
   }
   else if (command === 'lukas-quote') {
-    redditQuote.newQuote().then(function(response) {
+    redditQuote.new().then(function(response) {
       message.channel.send(response);
     })
   }
+
   else if (command === 'opinion') {
     let query = args.join(' ');
     googleSuggest.new(query).then(function(response) {
       if (response) {
         message.channel.send(response);
       } else {
-        message.channel.send('Try google, bruv :|')
+        message.channel.send('Try google, bruv : |')
       }
+    })
+  }
+  else if (command === 'dank-meme') {
+    dankMeme.new().then(function(meme) {
+      message.channel.send(meme)
     })
   }
 });
