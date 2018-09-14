@@ -8,6 +8,7 @@ const version = "yo";
 const keywords = require('./keywords');
 var CronJob = require('cron').CronJob;
 const redditQuote = require ('./reddit_quote')
+const googleSuggest = require ('./google_suggest')
 
 client.on("ready", () => {
   console.log("Bawt is ready!");
@@ -142,6 +143,16 @@ client.on("message", (message) => {
   else if (command === 'lukas-quote') {
     redditQuote.newQuote().then(function(response) {
       message.channel.send(response);
+    })
+  }
+  else if (command === 'opinion') {
+    let query = args.join(' ');
+    googleSuggest.new(query).then(function(response) {
+      if (response) {
+        message.channel.send(response);
+      } else {
+        message.channel.send('Try google, bruv :|')
+      }
     })
   }
 });
