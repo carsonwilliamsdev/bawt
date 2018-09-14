@@ -148,7 +148,11 @@ client.on("message", (message) => {
   else if (command === 'opinion') {
     let query = args.join(' ');
     googleSuggest.new(query).then(function(response) {
-      message.channel.send(response);
+      if (response) {
+        message.channel.send(response);
+      } else {
+        message.channel.send('Try google, bruv :|')
+      }
     })
   }
 });

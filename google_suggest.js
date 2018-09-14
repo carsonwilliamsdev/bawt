@@ -11,7 +11,7 @@ let parseXml = function (xml) {
 }
 
 let generateSuggestion = function (json) {
-  let answer = "I dont have an opinion about that."
+  let answer = null
   let suggestions = json.toplevel.CompleteSuggestion
   if (suggestions && suggestions.length > 0) {
     let suggestionJson = suggestions[Math.floor(Math.random()*suggestions.length)]
@@ -38,12 +38,14 @@ let generateUrl = function (query, word) {
 
 let makeRequest = function (query) {
   let words = ['is', 'are', 'can', 'will', 'and']
-  let word = words.randomElement();
-  let wordTwo = words.randomElement();
-  let wordThree = words.randomElement();
-  let url = generateUrl(query, word);
+  let url = generateUrl(query, words.randomElement());
+  let urlTwo = generateUrl(query, words.randomElement());
   let result = fetchXml(url);
-  return result
+  if (result) {
+    return result
+  } else {
+    return fetchXml(urlTwo);
+  }
 }
 
 module.exports = {
