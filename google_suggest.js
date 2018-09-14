@@ -37,7 +37,7 @@ let generateUrl = function (query, word) {
 }
 
 let makeRequest = function (query) {
-  let words = ['is', 'are', 'can', 'will', 'and']
+  let words = ['is', 'are', 'can', 'will']
   let url = generateUrl(query, words.randomElement());
   let urlTwo = generateUrl(query, words.randomElement());
   let result = fetchXml(url);
