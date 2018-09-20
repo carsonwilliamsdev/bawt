@@ -58,9 +58,9 @@ const initializeNewsWatcher = (channel) => {
 
   // Check for new entries every 60 seconds.
   watcher.on('new entries', function (entries) {
+    channel.send("BREAKING NEWS ALERT FROM INFOWARS.COM");
     entries.forEach(function (entry) {
-        channel.send("BREAKING NEWS ALERT FROM INFOWARS.COM");
-        channel.send(entry.title);
+        channel.send(entry.link);
     })
     channel.send(alexGifs.randomElement())
   })
