@@ -10,6 +10,7 @@ var CronJob = require('cron').CronJob;
 const redditQuote = require ('./reddit_quote')
 const googleSuggest = require ('./google_suggest')
 const dankMeme = require ('./dank_meme')
+const gifUnpacker = require ('./gif_unpacker')
 
 Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)]
@@ -170,6 +171,11 @@ client.on("message", (message) => {
     dankMeme.new().then(function(meme) {
       message.channel.send(meme)
     })
+  }
+  else if (command === 'alex-giffy') {
+    gifUnpacker.new().then(function(gifFrames) {
+      message.channel.send(gifFrames[0]);
+    });
   }
 });
 
