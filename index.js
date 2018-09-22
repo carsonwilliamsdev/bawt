@@ -10,7 +10,7 @@ var CronJob = require('cron').CronJob;
 const redditQuote = require ('./reddit_quote')
 const googleSuggest = require ('./google_suggest')
 const dankMeme = require ('./dank_meme')
-const gifUnpacker = require ('./gif_unpacker')
+const asciiGif = require ('./ascii_gif')
 
 Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)]
@@ -71,7 +71,7 @@ const initializeNewsWatcher = (channel) => {
   .start()
   .then(function (entries) {
   console.log(entries);
-    channel.send(`Watching ${feed} for breaking news about the globalists.`);
+    // channel.send(`Watching ${feed} for breaking news about the globalists.`);
   })
   .catch(function(error) {
     console.error(error)
@@ -173,10 +173,11 @@ client.on("message", (message) => {
     })
   }
   else if (command === 'alex-giffy') {
-    gifUnpacker.new().then(function(gifFrames) {
-      message.channel.send(gifFrames[0]);
-    });
-  }
+      asciiGif.initialize()
+      asciiGif.new().then(function (asciiArray) {
+        message.channel.send(`\`${asciiArray[0]}\``)
+      })
+    }
 });
 
 client.login(process.env.TOKEN);
