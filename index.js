@@ -10,6 +10,7 @@ var CronJob = require('cron').CronJob;
 const redditQuote = require ('./reddit_quote')
 const googleSuggest = require ('./google_suggest')
 const dankMeme = require ('./dank_meme')
+var Jimp = require('jimp');
 
 Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)]
@@ -69,8 +70,7 @@ const initializeNewsWatcher = (channel) => {
   watcher
   .start()
   .then(function (entries) {
-  console.log(entries);
-    channel.send(`Watching ${feed} for breaking news about the globalists.`);
+    console.log("news watcher initialized");
   })
   .catch(function(error) {
     console.error(error)
