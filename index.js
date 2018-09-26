@@ -18,13 +18,15 @@ Array.prototype.randomElement = function () {
 
 client.on("ready", () => {
   console.log("Bawt is ready!");
+
   mainChannel = client.channels.get(process.env.MAINCHANNELID);
+  newsChannel = client.channels.get(process.env.NEWSCHANNELID);
 
   new CronJob('0 20 16 * * *', function() {
     mainChannel.send("#blazeit");
   }, null, true, 'America/Denver');
 
-  initializeNewsWatcher(mainChannel);
+  initializeNewsWatcher(newsChannel);
 });
 
 const keyWords = keywords.keyWords();
@@ -44,7 +46,7 @@ const initializeNewsWatcher = (channel) => {
 
   var watcher = new Watcher(feed, interval)
 
-// A bunch of Alex jones gifs from imgur
+  // A bunch of Alex jones gifs from imgur
   const alexGifs = [
     'https://i.imgur.com/7tNfEHO.gif',
     'https://i.imgur.com/eLNfkb4.gif',
