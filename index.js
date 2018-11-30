@@ -87,7 +87,7 @@ client.on("message", (message) => {
   if (message.author.bot) return; // ignore all bot messages
 
   // no long messages, @mentions, or attachments
-  if(message.length > 240 || message.mentions.users.size || message.attachments.size)
+  if(message.length > 240 || message.mentions.users.size || message.attachments.size || message.channel != mainChannel)
   {
     msgqueue = [];
   }
