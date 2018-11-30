@@ -79,11 +79,117 @@ const initializeNewsWatcher = (channel) => {
   })
 }
 
+var msgqueue = [];
+
 client.on("message", (message) => {
   // log message [servername] [channelname] author: msg
   console.log(`[${message.guild}] [${message.channel.name}] ${message.author.username}: ${message.content}`);
-
   if (message.author.bot) return; // ignore all bot messages
+
+  // no long messages, @mentions, or attachments
+  if(message.length > 240 || message.mentions.users.size || message.attachments.size)
+  {
+    msgqueue = [];
+  }
+  else
+  {
+    msgqueue.push(message);
+  }
+  while(msgqueue.length > 3)
+  {
+    msgqueue.shift();
+  }
+
+  if(msgqueue.length == 3 && 
+    msgqueue[0].author.username === msgqueue[2].author.username && 
+    msgqueue[0].author.username != msgqueue[1].author.username &&
+    msgqueue[0].channel.name == msgqueue[1].channel.name && 
+    msgqueue[1].channel.name == msgqueue[2].channel.name)
+  {
+    // comic trigger    
+    var avatar1url = "" + msgqueue[0].author.avatarURL;
+    var avatar2url = "" + msgqueue[1].author.avatarURL;
+    var comictemplatefilename = "./comictemplate.png";
+
+    var avatar1promise = new Promise(function(resolve, reject) {
+      Jimp.read(avatar1url, function (err, avatar1image) {
+        if (err)
+        {
+          reject(err);
+        }
+        else
+        {
+          avatar1image.resize(90, 90);
+          resolve(avatar1image);
+        }
+      });
+    });
+
+    var avatar2promise = new Promise(function(resolve, reject) {
+      Jimp.read(avatar2url, function (err, avatar2image) {
+        if (err)
+        {
+          reject(err);
+        }
+        else
+        {
+          avatar2image.resize(90, 90);
+          resolve(avatar2image);
+        }
+      });
+    });
+
+    var comicpromise = new Promise(function(resolve, reject) {
+      Jimp.read(comictemplatefilename, function (err, comicimage) {
+        if (err)
+        {
+          reject(err);
+        }
+        else
+        {
+          resolve(comicimage);
+        }
+      });
+    });
+
+    var fontpromise = new Promise(function(resolve, reject) {
+      Jimp.loadFont(Jimp.FONT_SANS_16_BLACK)
+      .then(font => (resolve(font)));
+    });
+
+    Promise.all([avatar1promise, avatar2promise, comicpromise, fontpromise])
+    .then(function(values){
+      console.log("promises are done");
+
+      var avatar1 = values[0];
+      var avatar2 = values[1];
+      var comic = values[2];
+      var font = values[3];
+
+      comic.blit(avatar1, 30, 221);
+      comic.blit(avatar1, 495, 217);
+      comic.blit(avatar1, 951, 227);
+
+      comic.blit(avatar2, 245, 214);
+      comic.blit(avatar2, 734, 206);
+      comic.blit(avatar2, 1153, 218);
+
+      comic.print(font, 36, 40, msgqueue[0].content, 305, 101)
+        .print(font, 485, 44, msgqueue[1].content, 305, 101)
+        .print(font, 942, 40, msgqueue[2].content, 305, 101)
+        .write("./comic-.png", () => { // todo: what are the callback params for this?
+          message.channel.send(`generated comic`, {
+            files: ["./comic-.png"]
+        });
+      })
+
+      // clear queue
+      msgqueue = [];
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  } // end comic trigger
 
   let messageWords = message.content.split(" ");
   keyWords.forEach(function(element) {
