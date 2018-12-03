@@ -249,11 +249,7 @@ client.on("message", (message) => {
       comic.print(font, 36, 40, msgqueue[0].content, 305, 101)
         .print(font, 485, 44, msgqueue[1].content, 305, 101)
         .print(font, 942, 40, msgqueue[2].content, 305, 101)
-        .write("./comic-.png", () => { // todo: what are the callback params for this?
-          message.channel.send(`generated comic`, {
-            files: ["./comic-.png"]
-        });
-      })
+        .write("./comic-.png");
 
       // clear queue
       msgqueue = [];
@@ -350,6 +346,11 @@ client.on("message", (message) => {
     dankMeme.new().then(function(meme) {
       message.channel.send(meme)
     })
+  }
+  else if (command === 'comic') {
+    message.channel.send(`generated comic`, {
+      files: ["./comic-.png"]
+    });
   }
 });
 
