@@ -37,10 +37,10 @@ client.on("ready", () => {
     mainChannel.send("#blazeit");
   }, null, true, 'America/Denver');
 
-  initializeNewsWatcher(newsChannel);
-
   mainChannel = client.channels.get(process.env.MAINCHANNELID);
   newsChannel = client.channels.get(process.env.NEWSCHANNELID);
+
+  initializeNewsWatcher(newsChannel);
 
   twitchchannel.on('debug', msg => console.log(msg));
   twitchchannel.on('info', msg => console.log(msg));
