@@ -93,7 +93,6 @@ client.on("ready", () => {
 
   //twitchchannel.on('streamlabs/donation', ({ viewerId, viewerName, amount, currency, message }) => {}); // viewerId provided when found from the donator name
   twitchchannel.connect();
-  twitchchannel.Watcher.
 });
 
 const keyWords = keywords.keyWords();
