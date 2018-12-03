@@ -25,6 +25,19 @@ const twitchchannel = new TwitchChannel({
     secret: process.env.TWITCHCHANNELSECRET, // any random string
     is_test: true, // set to true to listen to test donations and hosts from streamlabs
   });
+  
+Array.prototype.randomElement = function () {
+    return this[Math.floor(Math.random() * this.length)]
+}
+
+client.on("ready", () => {
+  console.log("Bawt is ready!");
+
+  new CronJob('0 20 16 * * *', function() {
+    mainChannel.send("#blazeit");
+  }, null, true, 'America/Denver');
+
+  initializeNewsWatcher(newsChannel);
 
   mainChannel = client.channels.get(process.env.MAINCHANNELID);
   newsChannel = client.channels.get(process.env.NEWSCHANNELID);
@@ -79,19 +92,6 @@ const twitchchannel = new TwitchChannel({
 
   //twitchchannel.on('streamlabs/donation', ({ viewerId, viewerName, amount, currency, message }) => {}); // viewerId provided when found from the donator name
   twitchchannel.connect();
-  
-Array.prototype.randomElement = function () {
-    return this[Math.floor(Math.random() * this.length)]
-}
-
-client.on("ready", () => {
-  console.log("Bawt is ready!");
-
-  new CronJob('0 20 16 * * *', function() {
-    mainChannel.send("#blazeit");
-  }, null, true, 'America/Denver');
-
-  initializeNewsWatcher(newsChannel);
 });
 
 const keyWords = keywords.keyWords();
