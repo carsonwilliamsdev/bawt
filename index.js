@@ -15,17 +15,21 @@ const { TwitchChannel } = require('twitch-channel');
 var mainChannel;
 
 const twitchchannel = new TwitchChannel({
-    channel: 'realBAWITDABAW',
-    bot_name: 'BAWCITYBAWT', // twitch bot login
-    bot_token: process.env.TWITCHCHANNELTOKEN, // create your token here https://twitchapps.com/tmi/
-    client_id: process.env.TWITCHCLIENTID, // get it by registering a twitch app https://dev.twitch.tv/dashboard/apps/create (Redirect URI is not used)
-    client_secret: process.env.TWITCHSECRET, // secret of your registered twitch app
-    streamlabs_socket_token: process.env.STREAMLABSTOKEN, // get yours here https://streamlabs.com/dashboard#/apisettings in API TOKENS then "your socket API token"
-    port: 3001, // the lib will listen to this port
-    callback_url: 'https://baw-city-bawt.herokuapp.com', // url to your server, accessible from the outside world
-    secret: process.env.TWITCHCHANNELSECRET, // any random string
-    is_test: false, // set to true to listen to test donations and hosts from streamlabs
-  });
+  channel: 'realBAWITDABAW',
+  bot_name: 'BAWCITYBAWT', // twitch bot login
+  bot_token: process.env.TWITCHCHANNELTOKEN, // create your token here https://twitchapps.com/tmi/
+  client_id: process.env.TWITCHCLIENTID, // get it by registering a twitch app https://dev.twitch.tv/dashboard/apps/create (Redirect URI is not used)
+  client_secret: process.env.TWITCHSECRET, // secret of your registered twitch app
+  streamlabs_socket_token: process.env.STREAMLABSTOKEN, // get yours here https://streamlabs.com/dashboard#/apisettings in API TOKENS then "your socket API token"
+  port: 3001, // the lib will listen to this port
+  callback_url: 'https://baw-city-bawt.herokuapp.com', // url to your server, accessible from the outside world
+  secret: process.env.TWITCHCHANNELSECRET, // any random string
+  is_test: false, // set to true to listen to test donations and hosts from streamlabs
+});
+
+async function startTwitch(){
+  await twitchchannel.connect();
+}
   
 Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)]
@@ -92,7 +96,7 @@ client.on("ready", () => {
   });
 
   //twitchchannel.on('streamlabs/donation', ({ viewerId, viewerName, amount, currency, message }) => {}); // viewerId provided when found from the donator name
-  twitchchannel.start();
+  startTwitch();
 });
 
 const keyWords = keywords.keyWords();
