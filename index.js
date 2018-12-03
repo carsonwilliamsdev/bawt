@@ -24,7 +24,7 @@ const twitchchannel = new TwitchChannel({
     port: 3001, // the lib will listen to this port
     callback_url: 'https://baw-city-bawt.herokuapp.com', // url to your server, accessible from the outside world
     secret: process.env.TWITCHCHANNELSECRET, // any random string
-    is_test: true, // set to true to listen to test donations and hosts from streamlabs
+    is_test: false, // set to true to listen to test donations and hosts from streamlabs
   });
   
 Array.prototype.randomElement = function () {
@@ -92,7 +92,7 @@ client.on("ready", () => {
   });
 
   //twitchchannel.on('streamlabs/donation', ({ viewerId, viewerName, amount, currency, message }) => {}); // viewerId provided when found from the donator name
-  twitchchannel.connect();
+  twitchchannel.start();
 });
 
 const keyWords = keywords.keyWords();
