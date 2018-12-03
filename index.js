@@ -20,18 +20,11 @@ const twitchchannel = new TwitchChannel({
     client_id: process.env.TWITCHCLIENTID, // get it by registering a twitch app https://dev.twitch.tv/dashboard/apps/create (Redirect URI is not used)
     client_secret: process.env.TWITCHSECRET, // secret of your registered twitch app
     //streamlabs_socket_token: '', // get yours here https://streamlabs.com/dashboard#/apisettings in API TOKENS then "your socket API token"
-    port: 3100, // the lib will listen to this port
-    callback_url: 'https://baw-city-bawt.herokuapp.com/', // url to your server, accessible from the outside world
+    port: process.env.PORT || 3100, // the lib will listen to this port
+    callback_url: 'https://baw-city-bawt.herokuapp.com', // url to your server, accessible from the outside world
     secret: process.env.TWITCHCHANNELSECRET, // any random string
     is_test: true, // set to true to listen to test donations and hosts from streamlabs
   });
-  
-Array.prototype.randomElement = function () {
-    return this[Math.floor(Math.random() * this.length)]
-}
-
-client.on("ready", () => {
-  console.log("Bawt is ready!");
 
   mainChannel = client.channels.get(process.env.MAINCHANNELID);
   newsChannel = client.channels.get(process.env.NEWSCHANNELID);
@@ -86,6 +79,13 @@ client.on("ready", () => {
 
   //twitchchannel.on('streamlabs/donation', ({ viewerId, viewerName, amount, currency, message }) => {}); // viewerId provided when found from the donator name
   twitchchannel.connect();
+  
+Array.prototype.randomElement = function () {
+    return this[Math.floor(Math.random() * this.length)]
+}
+
+client.on("ready", () => {
+  console.log("Bawt is ready!");
 
   new CronJob('0 20 16 * * *', function() {
     mainChannel.send("#blazeit");
