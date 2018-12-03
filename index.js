@@ -12,6 +12,7 @@ const googleSuggest = require ('./google_suggest')
 const dankMeme = require ('./dank_meme')
 var Jimp = require('jimp');
 const { TwitchChannel } = require('twitch-channel');
+var mainChannel;
 
 const twitchchannel = new TwitchChannel({
     channel: 'realBAWITDABAW',
@@ -92,6 +93,7 @@ client.on("ready", () => {
 
   //twitchchannel.on('streamlabs/donation', ({ viewerId, viewerName, amount, currency, message }) => {}); // viewerId provided when found from the donator name
   twitchchannel.connect();
+  twitchchannel.Watcher.
 });
 
 const keyWords = keywords.keyWords();
