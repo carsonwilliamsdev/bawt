@@ -150,16 +150,14 @@ const initializeNewsWatcher = (channel) => {
 }
 
 var msgqueue = [];
-var lastcomicdatetime = Date.now();
 
 client.on("message", (message) => {
   // log message [servername] [channelname] author: msg
   console.log(`[${message.guild}] [${message.channel.name}] ${message.author.username}: ${message.content}`);
   if (message.author.bot) return; // ignore all bot messages
 
-  twitchchannel.say("[BAWCITY] " + message.author.username + ": " + message.content);
   // no long messages, @mentions, or attachments
-  if(message.length > 240 || message.mentions.users.size || message.attachments.size || message.channel != mainChannel)
+  if(message.length > 240 || message.mentions.users.size || message.attachments.size || message.channel != mainChannel || message.content.toLowerCase().startsWith(prefix))
   {
     msgqueue = [];
   }
@@ -253,7 +251,6 @@ client.on("message", (message) => {
 
       // clear queue
       msgqueue = [];
-      lastcomicdatetime = Date.now();
     })
     .catch(error => {
       console.log(error);
