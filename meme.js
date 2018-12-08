@@ -3,8 +3,8 @@ Array.prototype.randomElement = function () {
 }
 
 module.exports = {
-   new: function() {
-       return fetch("https://www.reddit.com/r/dankmemes/new/.json")
+   new: function(subreddit) {
+       return fetch(`https://www.reddit.com/r/${subreddit}/new/.json`)
        .then(function(response) {
          return response.json()
        })

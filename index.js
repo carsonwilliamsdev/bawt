@@ -9,7 +9,7 @@ const keywords = require('./keywords');
 var CronJob = require('cron').CronJob;
 const redditQuote = require ('./reddit_quote')
 const googleSuggest = require ('./google_suggest')
-const dankMeme = require ('./dank_meme')
+const meme = require ('./meme')
 var Jimp = require('jimp');
 const { TwitchChannel } = require('twitch-channel');
 var mainChannel;
@@ -30,7 +30,7 @@ const twitchchannel = new TwitchChannel({
 async function startTwitch(){
   await twitchchannel.connect();
 }
-  
+
 Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)]
 }
@@ -50,7 +50,7 @@ client.on("ready", () => {
   twitchchannel.on('debug', msg => console.log(msg));
   twitchchannel.on('info', msg => console.log(msg));
   twitchchannel.on('error', err => console.error(err));
-   
+
   twitchchannel.on('chat', ({ viewerId, viewerName, message }) => {
     mainChannel.send(viewerName + ": " + message);
   });
@@ -77,7 +77,7 @@ client.on("ready", () => {
   });
 
   twitchchannel.on('raid', ({ viewerId, viewerName, viewers }) => {});
-  
+
   twitchchannel.on('follow', ({ viewerId, viewerName }) => {
     mainChannel.send(viewerName + " followed!");
   });
@@ -170,13 +170,13 @@ client.on("message", (message) => {
     msgqueue.shift();
   }
 
-  if(msgqueue.length == 3 && 
-    msgqueue[0].author.username === msgqueue[2].author.username && 
+  if(msgqueue.length == 3 &&
+    msgqueue[0].author.username === msgqueue[2].author.username &&
     msgqueue[0].author.username != msgqueue[1].author.username &&
-    msgqueue[0].channel.name == msgqueue[1].channel.name && 
+    msgqueue[0].channel.name == msgqueue[1].channel.name &&
     msgqueue[1].channel.name == msgqueue[2].channel.name)
   {
-    // comic trigger    
+    // comic trigger
     var avatar1url = "" + msgqueue[0].author.avatarURL;
     var avatar2url = "" + msgqueue[1].author.avatarURL;
     var comictemplatefilename = "./comictemplate.png";
@@ -340,7 +340,22 @@ client.on("message", (message) => {
     })
   }
   else if (command === 'dank-meme') {
-    dankMeme.new().then(function(meme) {
+    meme.new('dankmemes').then(function(meme) {
+      message.channel.send(meme)
+    })
+  }
+  else if (command === 'trump-meme') {
+    meme.new('presidenttrumptwitter').then(function(meme) {
+      message.channel.send(meme)
+    })
+  }
+  else if (command === 'crackhead-cl') {
+    meme.new('crackheadcraigslist').then(function(meme) {
+      message.channel.send(meme)
+    })
+  }
+  else if (command === 'stockphoto') {
+    meme.new('shittystockphotos').then(function(meme) {
       message.channel.send(meme)
     })
   }
