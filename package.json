@@ -36,7 +36,9 @@
     "feed-watcher": "^0.2.1",
     "gif-frames": "^0.4.1",
     "giphy-js-sdk-core": "^1.0.5",
+    "jimp": "^0.5.3",
     "rss-parser": "^3.4.3",
+    "twitch-channel": "^0.2.5",
     "xml-js": "^1.6.7"
   }
 }

@@ -11,6 +11,26 @@ const redditQuote = require ('./reddit_quote')
 const googleSuggest = require ('./google_suggest')
 const dankMeme = require ('./dank_meme')
 const asciiGif = require ('./ascii_gif')
+var Jimp = require('jimp');
+const { TwitchChannel } = require('twitch-channel');
+var mainChannel;
+
+const twitchchannel = new TwitchChannel({
+  channel: 'realBAWITDABAW',
+  bot_name: 'BAWCITYBAWT', // twitch bot login
+  bot_token: process.env.TWITCHCHANNELTOKEN, // create your token here https://twitchapps.com/tmi/
+  client_id: process.env.TWITCHCLIENTID, // get it by registering a twitch app https://dev.twitch.tv/dashboard/apps/create (Redirect URI is not used)
+  client_secret: process.env.TWITCHSECRET, // secret of your registered twitch app
+  streamlabs_socket_token: process.env.STREAMLABSTOKEN, // get yours here https://streamlabs.com/dashboard#/apisettings in API TOKENS then "your socket API token"
+  port: 3001, // the lib will listen to this port
+  callback_url: 'https://baw-city-bawt.herokuapp.com', // url to your server, accessible from the outside world
+  secret: process.env.TWITCHCHANNELSECRET, // any random string
+  is_test: false, // set to true to listen to test donations and hosts from streamlabs
+});
+
+async function startTwitch(){
+  await twitchchannel.connect();
+}
 
 Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)]
@@ -18,13 +38,66 @@ Array.prototype.randomElement = function () {
 
 client.on("ready", () => {
   console.log("Bawt is ready!");
-  mainChannel = client.channels.get(process.env.MAINCHANNELID);
 
   new CronJob('0 20 16 * * *', function() {
     mainChannel.send("#blazeit");
   }, null, true, 'America/Denver');
 
-  initializeNewsWatcher(mainChannel);
+  mainChannel = client.channels.get(process.env.MAINCHANNELID);
+  newsChannel = client.channels.get(process.env.NEWSCHANNELID);
+
+  initializeNewsWatcher(newsChannel);
+
+  twitchchannel.on('debug', msg => console.log(msg));
+  twitchchannel.on('info', msg => console.log(msg));
+  twitchchannel.on('error', err => console.error(err));
+
+  twitchchannel.on('chat', ({ viewerId, viewerName, message }) => {
+    mainChannel.send(viewerName + ": " + message);
+  });
+
+  twitchchannel.on('cheer', ({ viewerId, viewerName, amount, message }) => {
+    mainChannel.send(viewerName + " cheered " + amount + " bits!");
+    mainChannel.send(message);
+  });
+
+  twitchchannel.on('sub', ({ viewerId, viewerName, amount, message }) => {
+    mainChannel.send(viewerName + " subbed!");
+    mainChannel.send(message);
+  });
+
+  twitchchannel.on('resub', ({ viewerId, viewerName, amount, message, months }) => {
+    mainChannel.send(viewerName + " resubbed for " + amount + " " + months + " months!");
+    mainChannel.send(message);
+  });
+
+  twitchchannel.on('subgift', ({ viewerId, viewerName, recipientId }) => {});
+
+  twitchchannel.on('host', ({ viewerId, viewerName, viewers }) => {
+    mainChannel.send(viewerName + " hosted with " + viewers + " viewers!");
+  });
+
+  twitchchannel.on('raid', ({ viewerId, viewerName, viewers }) => {});
+
+  twitchchannel.on('follow', ({ viewerId, viewerName }) => {
+    mainChannel.send(viewerName + " followed!");
+  });
+
+  twitchchannel.on('stream-begin', ({ game }) => {
+    console.log("stream start");
+    mainChannel.send("@here realBAWITDABAW is now streaming " + game + "!");
+  });
+
+  twitchchannel.on('stream-change-game', ({ game }) => {
+    mainChannel.send("realBAWITDABAW is now playing " + game + "!");
+  });
+
+  twitchchannel.on('stream-end', () => {
+
+  });
+
+  //twitchchannel.on('streamlabs/donation', ({ viewerId, viewerName, amount, currency, message }) => {}); // viewerId provided when found from the donator name
+  startTwitch();
 });
 
 const keyWords = keywords.keyWords();
@@ -44,7 +117,7 @@ const initializeNewsWatcher = (channel) => {
 
   var watcher = new Watcher(feed, interval)
 
-// A bunch of Alex jones gifs from imgur
+  // A bunch of Alex jones gifs from imgur
   const alexGifs = [
     'https://i.imgur.com/7tNfEHO.gif',
     'https://i.imgur.com/eLNfkb4.gif',
@@ -59,9 +132,9 @@ const initializeNewsWatcher = (channel) => {
 
   // Check for new entries every 60 seconds.
   watcher.on('new entries', function (entries) {
+    channel.send("BREAKING NEWS ALERT FROM INFOWARS.COM");
     entries.forEach(function (entry) {
-        channel.send("BREAKING NEWS ALERT FROM INFOWARS.COM");
-        channel.send(entry.title);
+        channel.send(entry.link);
     })
     channel.send(alexGifs.randomElement())
   })
@@ -70,19 +143,120 @@ const initializeNewsWatcher = (channel) => {
   watcher
   .start()
   .then(function (entries) {
-  console.log(entries);
-    // channel.send(`Watching ${feed} for breaking news about the globalists.`);
+    console.log("news watcher initialized");
   })
   .catch(function(error) {
     console.error(error)
   })
 }
 
+var msgqueue = [];
+
 client.on("message", (message) => {
   // log message [servername] [channelname] author: msg
   console.log(`[${message.guild}] [${message.channel.name}] ${message.author.username}: ${message.content}`);
-
   if (message.author.bot) return; // ignore all bot messages
+
+  // no long messages, @mentions, or attachments
+  if(message.length > 240 || message.mentions.users.size || message.attachments.size || message.channel != mainChannel || message.content.toLowerCase().startsWith(prefix))
+  {
+    msgqueue = [];
+  }
+  else
+  {
+    msgqueue.push(message);
+  }
+  while(msgqueue.length > 3)
+  {
+    msgqueue.shift();
+  }
+
+  if(msgqueue.length == 3 &&
+    msgqueue[0].author.username === msgqueue[2].author.username &&
+    msgqueue[0].author.username != msgqueue[1].author.username &&
+    msgqueue[0].channel.name == msgqueue[1].channel.name &&
+    msgqueue[1].channel.name == msgqueue[2].channel.name)
+  {
+    // comic trigger
+    var avatar1url = "" + msgqueue[0].author.avatarURL;
+    var avatar2url = "" + msgqueue[1].author.avatarURL;
+    var comictemplatefilename = "./comictemplate.png";
+
+    var avatar1promise = new Promise(function(resolve, reject) {
+      Jimp.read(avatar1url, function (err, avatar1image) {
+        if (err)
+        {
+          reject(err);
+        }
+        else
+        {
+          avatar1image.resize(90, 90);
+          resolve(avatar1image);
+        }
+      });
+    });
+
+    var avatar2promise = new Promise(function(resolve, reject) {
+      Jimp.read(avatar2url, function (err, avatar2image) {
+        if (err)
+        {
+          reject(err);
+        }
+        else
+        {
+          avatar2image.resize(90, 90);
+          resolve(avatar2image);
+        }
+      });
+    });
+
+    var comicpromise = new Promise(function(resolve, reject) {
+      Jimp.read(comictemplatefilename, function (err, comicimage) {
+        if (err)
+        {
+          reject(err);
+        }
+        else
+        {
+          resolve(comicimage);
+        }
+      });
+    });
+
+    var fontpromise = new Promise(function(resolve, reject) {
+      Jimp.loadFont(Jimp.FONT_SANS_16_BLACK)
+      .then(font => (resolve(font)));
+    });
+
+    Promise.all([avatar1promise, avatar2promise, comicpromise, fontpromise])
+    .then(function(values){
+      console.log("promises are done");
+
+      var avatar1 = values[0];
+      var avatar2 = values[1];
+      var comic = values[2];
+      var font = values[3];
+
+      comic.blit(avatar1, 30, 221);
+      comic.blit(avatar1, 495, 217);
+      comic.blit(avatar1, 951, 227);
+
+      comic.blit(avatar2, 245, 214);
+      comic.blit(avatar2, 734, 206);
+      comic.blit(avatar2, 1153, 218);
+
+      comic.print(font, 36, 40, msgqueue[0].content, 305, 101)
+        .print(font, 485, 44, msgqueue[1].content, 305, 101)
+        .print(font, 942, 40, msgqueue[2].content, 305, 101)
+        .write("./comic-.png");
+
+      // clear queue
+      msgqueue = [];
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  } // end comic trigger
 
   let messageWords = message.content.split(" ");
   keyWords.forEach(function(element) {
@@ -94,7 +268,7 @@ client.on("message", (message) => {
     });
 
   // messages must start with prefix
-  if (!message.content.toLowerCase().startsWith(prefix))  return;
+  if (!message.content.toLowerCase().startsWith(prefix)) return;
 
   const args = message.content.slice(prefix.length).trim().split(" ");
   const command = args.shift().toLowerCase().trim();
@@ -156,7 +330,6 @@ client.on("message", (message) => {
       message.channel.send(response);
     })
   }
-
   else if (command === 'opinion') {
     let query = args.join(' ');
     googleSuggest.new(query).then(function(response) {
@@ -178,6 +351,11 @@ client.on("message", (message) => {
         message.channel.send(`\`${asciiArray[0]}\``)
       })
     }
+  else if (command === 'comic') {
+    message.channel.send(`generated comic`, {
+      files: ["./comic-.png"]
+    });
+  }
 });
 
 client.login(process.env.TOKEN);
