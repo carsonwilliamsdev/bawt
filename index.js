@@ -6,6 +6,7 @@ giphyclient = GphApiClient(process.env.GIPHYAPIKEY)
 const prefix = "bawt";
 const version = "yo";
 const keywords = require('./keywords');
+const help = require('./help');
 var CronJob = require('cron').CronJob;
 const redditQuote = require ('./reddit_quote')
 const googleSuggest = require ('./google_suggest')
@@ -363,6 +364,9 @@ client.on("message", (message) => {
     message.channel.send(`generated comic`, {
       files: ["./comic-.png"]
     });
+  }
+  else if (command === 'help') {
+    message.channel.send(help.commands());
   }
 });
 
