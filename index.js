@@ -12,25 +12,7 @@ const redditQuote = require ('./reddit_quote')
 const googleSuggest = require ('./google_suggest')
 const meme = require ('./meme')
 var Jimp = require('jimp');
-const { TwitchChannel } = require('twitch-channel');
 var mainChannel;
-
-const twitchchannel = new TwitchChannel({
-  channel: 'realBAWITDABAW',
-  bot_name: 'BAWCITYBAWT', // twitch bot login
-  bot_token: process.env.TWITCHCHANNELTOKEN, // create your token here https://twitchapps.com/tmi/
-  client_id: process.env.TWITCHCLIENTID, // get it by registering a twitch app https://dev.twitch.tv/dashboard/apps/create (Redirect URI is not used)
-  client_secret: process.env.TWITCHSECRET, // secret of your registered twitch app
-  streamlabs_socket_token: process.env.STREAMLABSTOKEN, // get yours here https://streamlabs.com/dashboard#/apisettings in API TOKENS then "your socket API token"
-  port: 3001, // the lib will listen to this port
-  callback_url: 'https://baw-city-bawt.herokuapp.com', // url to your server, accessible from the outside world
-  secret: process.env.TWITCHCHANNELSECRET, // any random string
-  is_test: false, // set to true to listen to test donations and hosts from streamlabs
-});
-
-async function startTwitch(){
-  await twitchchannel.connect();
-}
 
 Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)]
@@ -47,57 +29,6 @@ client.on("ready", () => {
   newsChannel = client.channels.get(process.env.NEWSCHANNELID);
 
   initializeNewsWatcher(newsChannel);
-
-  twitchchannel.on('debug', msg => console.log(msg));
-  twitchchannel.on('info', msg => console.log(msg));
-  twitchchannel.on('error', err => console.error(err));
-
-  twitchchannel.on('chat', ({ viewerId, viewerName, message }) => {
-    mainChannel.send(viewerName + ": " + message);
-  });
-
-  twitchchannel.on('cheer', ({ viewerId, viewerName, amount, message }) => {
-    mainChannel.send(viewerName + " cheered " + amount + " bits!");
-    mainChannel.send(message);
-  });
-
-  twitchchannel.on('sub', ({ viewerId, viewerName, amount, message }) => {
-    mainChannel.send(viewerName + " subbed!");
-    mainChannel.send(message);
-  });
-
-  twitchchannel.on('resub', ({ viewerId, viewerName, amount, message, months }) => {
-    mainChannel.send(viewerName + " resubbed for " + amount + " " + months + " months!");
-    mainChannel.send(message);
-  });
-
-  twitchchannel.on('subgift', ({ viewerId, viewerName, recipientId }) => {});
-
-  twitchchannel.on('host', ({ viewerId, viewerName, viewers }) => {
-    mainChannel.send(viewerName + " hosted with " + viewers + " viewers!");
-  });
-
-  twitchchannel.on('raid', ({ viewerId, viewerName, viewers }) => {});
-
-  twitchchannel.on('follow', ({ viewerId, viewerName }) => {
-    mainChannel.send(viewerName + " followed!");
-  });
-
-  twitchchannel.on('stream-begin', ({ game }) => {
-    console.log("stream start");
-    mainChannel.send("@here realBAWITDABAW is now streaming " + game + "!");
-  });
-
-  twitchchannel.on('stream-change-game', ({ game }) => {
-    mainChannel.send("realBAWITDABAW is now playing " + game + "!");
-  });
-
-  twitchchannel.on('stream-end', () => {
-
-  });
-
-  //twitchchannel.on('streamlabs/donation', ({ viewerId, viewerName, amount, currency, message }) => {}); // viewerId provided when found from the donator name
-  startTwitch();
 });
 
 const keyWords = keywords.keyWords();
