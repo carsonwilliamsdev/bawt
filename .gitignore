@@ -74,3 +74,6 @@ typings/
 
 # Generated comics
 comic-*
+
+# Database Model Backup
+*.mwb.bak

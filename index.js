@@ -13,6 +13,16 @@ const googleSuggest = require ('./google_suggest')
 const meme = require ('./meme')
 var Jimp = require('jimp');
 var mainChannel;
+var knex = require('knex')({
+  client: 'mysql',
+  connection: {
+    host : process.env.DATABASE_HOST,
+    port : process.env.DATABASE_PORT,
+    user : process.env.DATABASE_USER,
+    password : process.env.DATABASE_PASS,
+    database : process.env.DATABASE_NAME
+  }
+});
 
 Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)]
