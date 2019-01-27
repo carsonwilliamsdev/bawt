@@ -11,6 +11,7 @@ var CronJob = require('cron').CronJob;
 const redditQuote = require ('./reddit_quote')
 const googleSuggest = require ('./google_suggest')
 const meme = require ('./meme')
+const defineWord = require ('./google-define')
 var Jimp = require('jimp');
 var mainChannel;
 var knex = require('knex')({
@@ -308,6 +309,17 @@ client.on("message", (message) => {
   }
   else if (command === 'help') {
     message.channel.send(help.commands());
+  }
+  else if (command === 'define') {
+    word = args[0]
+    typeOfWord = args[1]
+    let query = {word: word, typeOfWord: typeOfWord}
+    defineWord.new(query).then(function(definition){
+      if (definition) {
+        response = `${query.word}: ${definition}`
+        message.channel.send(response)
+      }
+    })
   }
 });
 
