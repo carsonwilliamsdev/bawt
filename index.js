@@ -315,10 +315,8 @@ client.on("message", (message) => {
     typeOfWord = args[1]
     let query = {word: word, typeOfWord: typeOfWord}
     defineWord.new(query).then(function(definition){
-      if (definition) {
-        response = `${query.word}: ${definition}`
-        message.channel.send(response)
-      }
+      response = `${query.word}: ${definition}`
+      message.channel.send(response)
     })
   }
 });
