@@ -1,3 +1,5 @@
+const Discord = require("discord.js");
+
 Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)]
 }
@@ -11,7 +13,12 @@ module.exports = {
        .then(function(json)  {
          let results = json.data.children
          let result = results.randomElement()
-         return result.data.url
+         const embeddedMsg = {
+           title: result.data.title,
+           image: { url: result.data.url }
+         }
+         console.log(embeddedMsg)
+         return embeddedMsg
       })
    }
 }

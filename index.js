@@ -284,22 +284,32 @@ client.on("message", (message) => {
   }
   else if (command === 'dank-meme') {
     meme.new('dankmemes').then(function(meme) {
-      message.channel.send(meme)
+      message.channel.send({embed: meme})
     })
   }
   else if (command === 'trump-meme') {
     meme.new('presidenttrumptwitter').then(function(meme) {
-      message.channel.send(meme)
+      message.channel.send({embed: meme})
     })
   }
   else if (command === 'crackhead-cl') {
     meme.new('crackheadcraigslist').then(function(meme) {
-      message.channel.send(meme)
+      message.channel.send({embed: meme})
     })
   }
   else if (command === 'stockphoto') {
     meme.new('shittystockphotos').then(function(meme) {
-      message.channel.send(meme)
+      message.channel.send({embed: meme})
+    })
+  }
+  else if (command === 'bpt-meme') {
+    meme.new('blackpeopletwitter').then(function(meme) {
+      message.channel.send({embed: meme})
+    })
+  }
+  else if (command === 'starterpack') {
+    meme.new('starterpacks').then(function(meme) {
+      message.channel.send({embed: meme})
     })
   }
   else if (command === 'comic') {
