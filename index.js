@@ -203,7 +203,7 @@ client.on("message", (message) => {
   const args = message.content.slice(prefix.length).trim().split(" ");
   const command = args.shift().toLowerCase().trim();
   if (command) {
-    message.channel.send(botMessage.new(command, message, args))
+    botMessage.new(command, message, args)
   }
 });
 

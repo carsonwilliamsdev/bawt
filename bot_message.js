@@ -14,23 +14,23 @@ const roll = (message) => {
   return `${message.author.username} rolled ${roll} (${min}-${max})`
 }
 
-let sup = function () {
-    return version
+let sup = function (message) {
+    message.channel.send(version)
   }
 
 let botMessage = function (command, message, args) {
     if (command == 'sup') {
-      return sup()
+      return sup(message)
     } else if (command == 'avatar') {
       if (!message.mentions.users.size) {
-          return message.channel.send(message.author.displayAvatarURL);
+          message.channel.send(message.author.displayAvatarURL);
       }
       const avatarList = message.mentions.users.map(user => {
-          return user.displayAvatarURL;
+          message.channel.send(user.displayAvatarURL);
       });
-      return (avatarList);
+      message.channel.send(avatarList);
     } else if (command === "roll") {
-      return roll(message);
+      message.channel.send(roll(message));
     }
     else if (command === "gif")
     {
@@ -43,10 +43,10 @@ let botMessage = function (command, message, args) {
       giphyclient.search('gifs', {"q": query, "limit" : 10, "rating" : rating})
       .then((response) => {
         let responseUrl = response.data[Math.floor(Math.random() * (10 - 1) + 1)].url
-        return responseUrl
+        message.channel.send(responseUrl);
       })
       .catch((err) => {
-        return "giphy didn't work...."
+        message.channel.send("giphy didn't work....");
       })
     }
     else if (command === "hot-gif")
@@ -54,8 +54,8 @@ let botMessage = function (command, message, args) {
       let rating = "pg-13";
       giphyclient.trending("gifs", {"rating" : rating})
       .then((response) => {
-        let responseUrl = response.data[Math.floor(Math.random() * (10 - 1) + 1)]
-        return response.url
+        let responseUrl = response.data[Math.floor(Math.random() * (10 - 1) + 1)].url
+        message.channel.send(responseUrl);
       })
       .catch((err) => {
         console.log(err);
@@ -67,44 +67,44 @@ let botMessage = function (command, message, args) {
           return response.json();
         })
         .then(function(trumpJson) {
-          return trumpJson.message
+          message.channel.send(trumpJson.message);
       });
     }
     else if (command === 'lukas-quote') {
       redditQuote.new().then(function(response) {
-        return response
+        message.channel.send(response);
       })
     }
     else if (command === 'opinion') {
       googleSuggest.new(query).then(function(response) {
         if (response) {
-          return response
+          message.channel.send(response);
         }
       })
     }
     else if (command === 'dank-meme') {
       meme.new('dankmemes').then(function(meme) {
-        return {embed: meme}
+        message.channel.send({embed: meme});
       })
     }
     else if (command === 'trump-meme') {
       meme.new('presidenttrumptwitter').then(function(meme) {
-        return {embed: meme}
+        message.channel.send({embed: meme});
       })
     }
     else if (command === 'crackhead-cl') {
       meme.new('crackheadcraigslist').then(function(meme) {
-        return {embed: meme}
+        message.channel.send({embed: meme});
       })
     }
     else if (command === 'stockphoto') {
       meme.new('shittystockphotos').then(function(meme) {
-        return {embed: meme}
+        message.channel.send({embed: meme});
       })
     }
     else if (command === 'bpt-meme') {
       meme.new('blackpeopletwitter').then(function(meme) {
-        return {embed: meme}
+        message.channel.send({embed: meme});
       })
     }
     else if (command === 'starterpack') {
@@ -113,12 +113,10 @@ let botMessage = function (command, message, args) {
       })
     }
     else if (command === 'comic') {
-      return {
-        files: ["./comic-.png"]
-      }
+      message.channel.send({files: ["./comic-.png"]})
     }
     else if (command === 'help') {
-      return help.commands()
+      message.channel.send(help.commands());
     }
     else if (command === 'define') {
       word = args[0]
@@ -126,13 +124,13 @@ let botMessage = function (command, message, args) {
       let query = {word: word, typeOfWord: typeOfWord}
       defineWord.new(query).then(function(definition){
         response = `${query.word}: ${definition}`
-        return response
+        message.channel.send(response);
       })
     }
 }
 
 module.exports = {
   new: function(command, message, args) {
-    return botMessage(command, message, args);
+    botMessage(command, message, args)
   }
 }
