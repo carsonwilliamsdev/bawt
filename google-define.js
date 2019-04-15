@@ -9,9 +9,9 @@ let defineWord = function (query) {
   })
   .then(function(json)  {
     if (query.typeOfWord) {
-      return json.meaning[query.typeOfWord][0].definition
+      return json[0].meaning[query.typeOfWord][0].definition
     } else {
-      return json.meaning['noun'][0].definition
+      return json[0].meaning['noun'][0].definition
     }
  })
 }
