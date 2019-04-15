@@ -5,9 +5,13 @@ Array.prototype.randomNumber = function () {
 }
 
 module.exports = {
-   new: function() {
-       let comicNumber = Math.floor(Math.random() * 2130)
-       return fetch(`https://xkcd.com/${comicNumber}/info.0.json`)
+   new: function(newest = null) {
+     let comicUrl = "https://xkcd.com/info.0.json"
+      if (newest == null) {
+        let comicNumber = Math.floor(Math.random() * 2130)
+        comicUrl = `https://xkcd.com/${comicNumber}/info.0.json`
+      }
+     return fetch(comicUrl)
        .then(function(response) {
          return response.json()
        })
@@ -17,7 +21,6 @@ module.exports = {
            title: json.title,
            image: { url: json.img }
          }
-         console.log(embeddedMsg)
          return embeddedMsg
       })
    }

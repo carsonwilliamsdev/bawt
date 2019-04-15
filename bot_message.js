@@ -138,6 +138,11 @@ let botMessage = function (command, message, args) {
         message.channel.send({embed: response});
       })
     }
+    else if (command === 'new-xkcd') {
+      xkcd.new(true).then(function(response){
+        message.channel.send({embed: response});
+      })
+    }
 }
 
 module.exports = {
