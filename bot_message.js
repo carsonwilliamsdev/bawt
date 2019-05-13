@@ -76,6 +76,7 @@ let botMessage = function (command, message, args) {
       })
     }
     else if (command === 'opinion') {
+      let query = args.join(' ');
       googleSuggest.new(query).then(function(response) {
         if (response) {
           message.channel.send(response);
