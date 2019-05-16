@@ -4,6 +4,7 @@ const redditQuote = require ('./reddit_quote')
 const googleSuggest = require ('./google_suggest')
 const meme = require ('./meme')
 const defineWord = require ('./google-define')
+const piwigo = require ('./piwigo')
 
 const version = "yeet";
 
@@ -131,6 +132,9 @@ let botMessage = function (command, message, args) {
         response = `${query.word}: ${definition}`
         message.channel.send(response);
       })
+    }
+    else if (command === 'ptest'){
+      piwigo.uploadImage('http://img.su.pe/i.php?/upload/2019/04/09/20190409181618-b8449f41-la.jpg')
     }
 }
 

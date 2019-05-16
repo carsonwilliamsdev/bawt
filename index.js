@@ -9,6 +9,7 @@ var CronJob = require('cron').CronJob;
 const botMessage = require ('./bot_message')
 var Jimp = require('jimp');
 var mainChannel;
+const piwigo = require ('./piwigo')
 var knex = require('knex')({
   client: 'mysql',
   connection: {
@@ -196,6 +197,14 @@ client.on("message", (message) => {
         message.channel.send(response);
       }
     });
+
+  if (message.attachments) {
+    message.attachments.forEach(attachment => {
+      const url = attachment.url;
+      console.log("attachment detected:" + url)
+      piwigo.uploadImage(url)
+    });
+  }
 
   // messages must start with prefix
   if (!message.content.toLowerCase().startsWith(prefix)) return;
