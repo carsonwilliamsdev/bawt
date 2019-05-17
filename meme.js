@@ -4,24 +4,45 @@ Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)]
 }
 
-function imageUrl(url) {
-    return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+function imageUrl(result) {
+    return (result.data.url.match(/\.(jpeg|jpg|gif|png)$/) != null)
 }
 
-function generateMsg(result) {
-  if (imageUrl(result.data.url)) {
+function memeAllowed(result) {
+  if (result.data.is_video ||
+    result.data.selftext.length > 2049 ||
+    result.data.over_18)  {
+      return false
+    } else {
+      return true
+    }
+}
+
+function youtubeUrl(result) {
+  return (result.data.media && result.data.media.type == 'youtube.com')
+}
+
+function generateMsg(results) {
+  let result = results.randomElement()
+
+  if (imageUrl(result)) {
     return {
       title: result.data.title,
       image: { url: result.data.url }
     }
-  } else {
+  } else if (youtubeUrl(result)) {
     return {
       title: result.data.title,
-      description: result.selftext
+      video: { url: result.data.url }
+    }
+  }
+  else {
+    return {
+      title: result.data.title,
+      description: result.data.selftext
     }
   }
 }
-
 
 module.exports = {
    new: function(subreddit) {
@@ -31,10 +52,8 @@ module.exports = {
        })
        .then(function(json)  {
          let results = json.data.children
-         let result = results.randomElement()
-         embeddedMsg = generateMsg(result)
-         console.log(embeddedMsg)
-         return embeddedMsg
+         let result = generateMsg(results)
+         return result
       })
    }
 }

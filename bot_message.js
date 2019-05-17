@@ -123,7 +123,7 @@ let botMessage = function (command, message, args) {
         message.channel.send({embed: meme});
       })
     }
-    else if (command === 'russian-roulette') {
+    else if (command === 'rando') {
       meme.new('random').then(function(meme) {
         message.channel.send({embed: meme})
       })
