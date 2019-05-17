@@ -118,6 +118,11 @@ let botMessage = function (command, message, args) {
         message.channel.send({embed: meme})
       })
     }
+    else if (command === 'russian-roulette') {
+      meme.new('random').then(function(meme) {
+        message.channel.send({embed: meme})
+      })
+    }
     else if (command === 'comic') {
       message.channel.send({files: ["./comic-.png"]})
     }
