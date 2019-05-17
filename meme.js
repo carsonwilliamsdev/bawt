@@ -8,13 +8,13 @@ function imageUrl(result) {
     return (result.data.url.match(/\.(jpeg|jpg|gif|png)$/) != null)
 }
 
-function memeAllowed(result) {
+function memeDisallowed(result) {
   if (result.data.is_video ||
     result.data.selftext.length > 2049 ||
     result.data.over_18)  {
-      return false
-    } else {
       return true
+    } else {
+      return false
     }
 }
 
@@ -24,7 +24,9 @@ function youtubeUrl(result) {
 
 function generateMsg(results) {
   let result = results.randomElement()
-
+  if (memeDisallowed(result)) {
+    return generateMsg(results)
+  }
   if (imageUrl(result)) {
     return {
       title: result.data.title,
