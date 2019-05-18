@@ -76,7 +76,7 @@ function isAdmin() {
         getStatus()
         .then(function (response) {
             var status = response.result.status
-            var isAdmin = (status == 'webmaster');       
+            var isAdmin = (status == 'webmaster' || status == 'administrator');       
             console.log("isAdmin = " + isAdmin + "\n" + "status = " + status)
             resolve(isAdmin)
         })
