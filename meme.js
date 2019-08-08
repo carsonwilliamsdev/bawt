@@ -25,7 +25,7 @@ function youtubeUrl(result) {
 function generateMsg(results) {
   let result = results.randomElement()
   if (memeDisallowed(result)) {
-    return
+    return 'Sorry Dave, I cannot do that'
   }
   if (imageUrl(result)) {
     return {
