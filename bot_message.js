@@ -4,6 +4,7 @@ const redditQuote = require ('./reddit_quote')
 const googleSuggest = require ('./google_suggest')
 const meme = require ('./meme')
 const defineWord = require ('./google-define')
+const xkcd = require ('./xkcd')
 
 const version = "yeet";
 
@@ -141,6 +142,16 @@ let botMessage = function (command, message, args) {
       defineWord.new(query).then(function(definition){
         response = `${query.word}: ${definition}`
         message.channel.send(response);
+      })
+    }
+    else if (command === 'xkcd') {
+      xkcd.new().then(function(response){
+        message.channel.send({embed: response});
+      })
+    }
+    else if (command === 'new-xkcd') {
+      xkcd.new(true).then(function(response){
+        message.channel.send({embed: response});
       })
     }
 }
