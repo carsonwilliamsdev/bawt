@@ -34,7 +34,7 @@ client.on("ready", () => {
   mainChannel = client.channels.get(process.env.MAINCHANNELID);
   newsChannel = client.channels.get(process.env.NEWSCHANNELID);
 
-  initializeNewsWatcher(newsChannel);
+  //initializeNewsWatcher(newsChannel);
 });
 
 const keyWords = keywords.keyWords();
