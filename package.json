@@ -35,7 +35,7 @@
     "feed-watcher": "^0.2.1",
     "giphy-js-sdk-core": "^1.0.5",
     "jimp": "^0.5.3",
-    "knex": "^0.16.2",
+    "knex": "^0.19.5",
     "mysql": "^2.16.0",
     "rss-parser": "^3.4.3",
     "xml-js": "^1.6.7"
